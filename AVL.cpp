@@ -5,8 +5,11 @@
 
 int main()
 {
-	AVL_tree<int> a(10, nullptr, nullptr, 0);
+	AVL_tree<int> a(10, nullptr, nullptr);
 	a.UpdateHeight();
+	a.Rebalance();
+	a.RotateLeft();
+	a.RotateRight();
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"

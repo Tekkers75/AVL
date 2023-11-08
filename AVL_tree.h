@@ -32,7 +32,7 @@ struct AVL_tree: public TreeNode<T>
         this->height = std::max(leftHeight, rightHeight) + 1;
     }
 
-    void AVL_tree<T>::Rebalance()
+    void Rebalance()
     {
         // ќбновл€ем высоту текущего узла
         UpdateHeight();
@@ -62,7 +62,7 @@ struct AVL_tree: public TreeNode<T>
         }
     }
 
-    void AVL_tree<T>::RotateLeft()
+    void RotateLeft()
     {
         // ¬ыполн€ем левое вращение дл€ текущего узла
         AVL_tree<T>* newRoot = this->Right();
@@ -84,8 +84,8 @@ struct AVL_tree: public TreeNode<T>
         this->parent = newRoot;
     }
 
-    template <class T>
-    void AVL_tree<T>::RotateRight()
+   
+    void RotateRight()
     {
         // ¬ыполн€ем правое вращение дл€ текущего узла
         AVL_tree<T>* newRoot = this->Left();
