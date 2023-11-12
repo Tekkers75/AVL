@@ -3,22 +3,26 @@
 #include <iostream>
 #include "AVL_tree.h"
 
+
+// основной код 
 int main()
 {
-	AVL_tree<int> a(10, nullptr, nullptr);
-	a.UpdateHeight();
-	a.Rebalance();
-	a.RotateLeft();
-	a.RotateRight();
+    
+    AVLTree<int>* root = new AVLTree<int>(10);
+    root->InsertNode(root, 5);
+    root->InsertNode(root, 6);
+    root->InsertNode(root, 89);
+    root->InsertNode(root, 56);
+    root->InsertNode(root, 2);
+    root->InsertNode(root, 58);
+    root->InsertNode(root, 7);
+    root->InsertNode(root, 23);
+    root->InOrderTraversal(root);
+    std::cout << endl;
+    std::cout << endl;
+    root->PrintTree(root, 0);
+    root->RotateLeft(root);
+
+
+    return 0;
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
