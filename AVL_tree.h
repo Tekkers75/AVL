@@ -33,7 +33,7 @@ public:
     }
 
 
-    void RotateLeft(AVLTree*& node)
+    void RotateLeft(AVLTree<T>*& node)
     {
         if (node == nullptr || node->right == nullptr) 
         {
@@ -83,7 +83,7 @@ public:
         }
     }
 
-    void InOrderTraversal(AVLTree* node)
+    void InOrderTraversal(AVLTree<T>* node)
     {
         if (node != nullptr) {
             InOrderTraversal(node->left);
@@ -93,10 +93,10 @@ public:
     }
 
 
-    void InsertNode(AVLTree*& node, const T& value)
+    void InsertNode(AVLTree<T>*& node, const T& value)
     {
         if (node == nullptr) {
-            node = new AVLTree(value);
+            node = new AVLTree<T>(value);
         }
         else if (value < node->data) {
             InsertNode(node->left, value);
