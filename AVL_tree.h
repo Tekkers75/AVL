@@ -9,126 +9,204 @@
 using namespace std;
 
 template <class T>
-class AVLTree {
+class AVLTreeNode:public TreeNode<T> {
 public:
-    T data;
-    AVLTree<T>* left;
-    AVLTree<T>* right;
     int balanceFactor;
     int height;
 
-    AVLTree(const T& value, AVLTree<T>* leftChild = nullptr, AVLTree<T>* rightChild = nullptr)
-        : data(value), left(leftChild), right(rightChild), balanceFactor(0), height(0)
+    AVLTreeNode(const T& value, TreeNode<T>* leftChild = nullptr, TreeNode<T>* rightChild = nullptr)
+        : TreeNode<T>(value, leftChild, rightChild), balanceFactor(0), height(0)
+    {
+    }
+};
+
+
+template <class T>
+class AVLTree {
+public:
+
+
+    AVLTreeNode<T>* root;
+
+    AVLTree() : root(nullptr)
     {
     }
 
-    int Height(AVLTree* node)
+    void RotateLeft(AVLTreeNode<T>*& node);
+    void RotateRight(AVLTreeNode<T>*& node);
+    int  Height(AVLTreeNode<T>* node);
+    void InsertNode(AVLTreeNode<T>*& node, const T& value);
+    void Balance(AVLTreeNode<T>*& node);
+};
+
+    template <class T>
+    int AVLTree<T>::Height(AVLTreeNode<T>* node)
     {
         if (node == nullptr) {
             return -1;
         }
         else {
-            return node->height;
+            node->height = std::max(Height(dynamic_cast<AVLTreeNode<T>*>(node->left)), Height(dynamic_cast<AVLTreeNode<T>*>(node->right))) + 1;
+            return node->height; /*static_cast<AVLTreeNode<int>*>(node)->height;*/
         }
     }
 
 
-    void RotateLeft(AVLTree<T>*& node)
+    //template <class T>
+    //void AVLTree<T>::RotateLeft(AVLTreeNode<T>** node)
+    //{
+    //    if (*node == nullptr || *node->right == nullptr) 
+    //    {
+    //        return;
+    //    }
+    //    /*AVLTreeNode<T>* pivot = node->right;*/
+    //    AVLTreeNode<T>* pivot = static_cast<AVLTreeNode<T>*>(*node->right);
+    //    *node->right = pivot->left;
+    //    pivot->left = *node;
+    //    node = pivot;
+    //}
+
+    template <class T>
+    void AVLTree<T>::RotateLeft(AVLTreeNode<T>*& node)
     {
-        if (node == nullptr || node->right == nullptr) 
+        if (node == nullptr || node->right == nullptr)
         {
             return;
         }
-        AVLTree* pivot = node->right;
+        /*AVLTreeNode<T>* pivot = node->right;*/
+        AVLTreeNode<T>* pivot = dynamic_cast<AVLTreeNode<T>*>(node->right);
         node->right = pivot->left;
         pivot->left = node;
         node = pivot;
     }
 
-    void RotateRight(AVLTree<T>*& node)
+    template <class T>
+    void AVLTree<T>::RotateRight(AVLTreeNode<T>*& node)
     {
         if (node == nullptr || node->left == nullptr)
         {
             return;
         }
-        AVLTree* pivot = node->left;
+        AVLTreeNode<T>* pivot = dynamic_cast<AVLTreeNode<T>*>(node->left);
         node->left = pivot->right;
         pivot->right = node;
         node = pivot;
     }
-
  
-
-    //промежуток между уровн€ми
-    const int indentBlock = 6;
-    //вставить numпробелов в текущей строке
-    void IndentBlanks(int num) {
-        for (int i = 0; i < num; i++)
-            cout << "  ";
-    }
-
-    //печать дерева боком,использу€ RNL- прохождение
-    template<class T>
-    void PrintTree(AVLTree<T>* node, int level) {
-        //печатать правое дерево узла node, пока он не равет nullptr
-        if (node != nullptr)
-        {
-            //печатать правое поддерево узла node
-            PrintTree(node->right, level + 1);
-            //выровн€ть текущий уровень и вывести поле данных
-            IndentBlanks(indentBlock * level);
-            cout << node->data << endl;
-            //печатать левое поддерево узла node
-            PrintTree(node->left, level + 1);
-        }
-    }
-
-    void InOrderTraversal(AVLTree<T>* node)
+    template <class T>
+    void AVLTree<T>::Balance(AVLTreeNode<T>*& node)
     {
-        if (node != nullptr) {
-            InOrderTraversal(node->left);
-            std::cout << node->data << " ";
-            InOrderTraversal(node->right);
-        }
+        node->height = std::max(Height(dynamic_cast<AVLTreeNode<T>*>(node->left)), Height(dynamic_cast<AVLTreeNode<T>*>(node->right))) + 1;
+        node->balanceFactor = Height(dynamic_cast<AVLTreeNode<T>*>(node->right)) - Height(dynamic_cast<AVLTreeNode<T>*>(node->left));
     }
 
 
-    void InsertNode(AVLTree<T>*& node, const T& value)
-    {
-        if (node == nullptr) {
-            node = new AVLTree<T>(value);
-        }
-        else if (value < node->data) {
-            InsertNode(node->left, value);
-        }
-        else if (value > node->data) {
-            InsertNode(node->right, value);
-        }
+    //template <class T>
+    //void AVLTree<T>::InsertNode(AVLTreeNode<T>*& node, const T& value)
+    //{
+    //    if (node == nullptr) {
+    //        node = new AVLTreeNode<T>(value);
+    //    }
+    //    else if (value < node->data) {
+    //        InsertNode(static_cast<AVLTreeNode<T>*>(node->left), value);
+    //    }
+    //    else if (value > node->data) {
+    //        InsertNode(static_cast<AVLTreeNode<T>*>(node->right), value);
+    //    }
 
+    //    // ќбновление высоты и баланса узла
+    //    node->height = std::max(Height(static_cast<AVLTreeNode<T>*>(node->left)), Height(static_cast<AVLTreeNode<T>*>(node->right))) + 1;
+    //    node->balanceFactor = Height(static_cast<AVLTreeNode<T>*>(node->left)) - Height(static_cast<AVLTreeNode<T>*>(node->right));
+
+    //    //// Ѕалансировка дерева
+    //    //if (node->balanceFactor > 1) {
+    //    //    if (value < node->left->data) {
+    //    //        RotateRight(node);
+    //    //    }
+    //    //    else {
+    //    //        RotateLeft(static_cast<AVLTreeNode<T>*>(node->left));
+    //    //        RotateRight(node);
+    //    //    }
+    //    //}
+    //    //else if (node->balanceFactor < -1) {
+    //    //    if (value > node->right->data) {
+    //    //        RotateLeft(node);
+    //    //    }
+    //    //    else {
+    //    //        RotateRight(static_cast<AVLTreeNode<T>*>(node->right));
+    //    //        RotateLeft(node);
+    //    //    }
+    //    //}
+    //}
+
+    template <class T>
+    void AVLTree<T>::InsertNode(AVLTreeNode<T>*& node, const T& value)
+    {
+        Add(node, value);
         // ќбновление высоты и баланса узла
-        node->height = std::max(Height(node->left), Height(node->right)) + 1;
-        node->balanceFactor = Height(node->left) - Height(node->right);
-
+        node->height = std::max(Height(dynamic_cast<AVLTreeNode<T>*>(node->left)), Height(dynamic_cast<AVLTreeNode<T>*>(node->right))) + 1;
+        node->balanceFactor = Height(dynamic_cast<AVLTreeNode<T>*>(node->left)) - Height(dynamic_cast<AVLTreeNode<T>*>(node->right));
+        
         // Ѕалансировка дерева
         if (node->balanceFactor > 1) {
             if (value < node->left->data) {
                 RotateRight(node);
             }
             else {
-                RotateLeft(node->left);
+                RotateLeft(dynamic_cast<AVLTreeNode<T>*>(node->left));
+                //RotateLeft(static_cast<AVLTreeNode<T>*>(node->left));
                 RotateRight(node);
             }
         }
         else if (node->balanceFactor < -1) {
             if (value > node->right->data) {
-                RotateLeft(node);
+                RotateLeft(&node);
             }
             else {
-                RotateRight(node->right);
-                RotateLeft(node);
+                RotateRight(dynamic_cast<AVLTreeNode<T>*>(node->right));
+                RotateLeft(&node);
             }
         }
+
     }
+
+
+
+
+    ////промежуток между уровн€ми
+    //const int indentBlock = 6;
+    ////вставить numпробелов в текущей строке
+    //void IndentBlanks(int num) {
+    //    for (int i = 0; i < num; i++)
+    //        cout << "  ";
+    //}
+
+    ////печать дерева боком,использу€ RNL- прохождение
+    //template<class T>
+    //void PrintTree(AVLTreeNode<T>* node, int level) {
+    //    //печатать правое дерево узла node, пока он не равет nullptr
+    //    if (node != nullptr)
+    //    {
+    //        //печатать правое поддерево узла node
+    //        PrintTree(node->right, level + 1);
+    //        //выровн€ть текущий уровень и вывести поле данных
+    //        IndentBlanks(indentBlock * level);
+    //        cout << node->data << endl;
+    //        //печатать левое поддерево узла node
+    //        PrintTree(node->left, level + 1);
+    //    }
+    //}
+
+    //void InOrderTraversal(AVLTreeNode<T>* node)
+    //{
+    //    if (node != nullptr) {
+    //        InOrderTraversal(node->left);
+    //        std::cout << node->data << " ";
+    //        InOrderTraversal(node->right);
+    //    }
+    //}
+
+    /////////////////////////////////////////////
 
     //void DeleteNode(TreeNode*& node, const T& value)
     //{
@@ -381,7 +459,7 @@ public:
     //    int rightHeight = (this->right != nullptr) ? this->right->height : -1;
     //    this->height = std::max(leftHeight, rightHeight) + 1;
     //}
-};
+//};
 
 //
 //template <class T>
