@@ -1,3 +1,4 @@
+//@author Саранчин К.А.
 #pragma once
 #include <iostream>
 #include <vector>
